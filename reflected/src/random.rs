@@ -7,7 +7,7 @@ use rust_decimal::Decimal;
 
 use crate::Type;
 
-pub(crate) fn random_val(tp: &Type) -> Option<String> {
+pub(crate) fn random_val(tp: Type) -> Option<String> {
     let mut rng = thread_rng();
 
     match tp {
@@ -20,7 +20,7 @@ pub(crate) fn random_val(tp: &Type) -> Option<String> {
         Type::Bool => rng.gen_range(0..2).to_string().into(),
         Type::Optional(opt) => {
             if rng.gen() {
-                random_val(&opt.to_type())
+                random_val(opt.to_type())
             } else {
                 None
             }

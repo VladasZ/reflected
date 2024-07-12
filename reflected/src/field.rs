@@ -8,18 +8,24 @@ use std::{
 
 use crate::Type;
 
-pub type FieldRef<T> = &'static Field<'static, T>;
-
-pub struct Field<'a, T> {
-    pub name:        &'a str,
+pub struct Field<T> {
+    pub name:        &'static str,
     pub tp:          Type,
-    pub type_name:   &'a str,
-    pub parent_name: &'a str,
+    pub type_name:   &'static str,
+    pub parent_name: &'static str,
     pub optional:    bool,
-    pub _p:          PhantomData<T>,
+    pub _p:          PhantomData<*const T>,
 }
 
-impl<T> Field<'_, T> {
+impl<T> Clone for Field<T> {
+    fn clone(&self) -> Self {
+        *self
+    }
+}
+
+impl<T> Copy for Field<T> {}
+
+impl<T> Field<T> {
     pub fn is_id(&self) -> bool {
         self.name == "id"
     }
@@ -33,7 +39,7 @@ impl<T> Field<'_, T> {
     }
 }
 
-impl<'a, T> Debug for Field<'a, T> {
+impl<T> Debug for Field<T> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
@@ -43,14 +49,14 @@ impl<'a, T> Debug for Field<'a, T> {
     }
 }
 
-impl<T> Deref for Field<'_, T> {
+impl<T> Deref for Field<T> {
     type Target = Type;
     fn deref(&self) -> &Self::Target {
         &self.tp
     }
 }
 
-impl<'a, T> Hash for Field<'a, T> {
+impl<T> Hash for Field<T> {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.name.hash(state);
         self.tp.hash(state);
@@ -60,7 +66,7 @@ impl<'a, T> Hash for Field<'a, T> {
     }
 }
 
-impl<'a, T> PartialEq for Field<'a, T> {
+impl<T> PartialEq for Field<T> {
     fn eq(&self, other: &Self) -> bool {
         self.name.eq(other.name)
             && self.tp.eq(&other.tp)
@@ -69,7 +75,7 @@ impl<'a, T> PartialEq for Field<'a, T> {
     }
 }
 
-impl<'a, T> Eq for Field<'a, T> {}
+impl<T> Eq for Field<T> {}
 
 #[cfg(test)]
 mod test {

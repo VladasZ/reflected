@@ -1,16 +1,16 @@
 use crate::{random::random_val, Field};
 
-pub trait Reflected: Default + 'static {
+pub trait Reflected: Send + Default + 'static {
     fn type_name() -> &'static str;
 
-    fn fields() -> &'static [&'static Field<'static, Self>];
-    fn simple_fields() -> &'static [&'static Field<'static, Self>];
+    fn fields() -> &'static [Field<Self>];
+    fn simple_fields() -> &'static [Field<Self>];
 
-    fn get_value(&self, field: &'static Field<'static, Self>) -> String;
-    fn set_value(&mut self, field: &'static Field<'static, Self>, value: Option<&str>);
+    fn get_value(&self, field: Field<Self>) -> String;
+    fn set_value(&mut self, field: Field<Self>, value: Option<&str>);
 
-    fn field_by_name(name: &str) -> &'static Field<'static, Self> {
-        Self::fields().iter().find(|a| a.name == name).unwrap()
+    fn field_by_name(name: &str) -> Field<Self> {
+        *Self::fields().iter().find(|a| a.name == name).unwrap()
     }
 
     fn value_by_name(&self, name: &str) -> String {
@@ -24,7 +24,7 @@ pub trait Reflected: Default + 'static {
             if field.is_custom() {
                 continue;
             }
-            res.set_value(field, random_val(&field.tp).as_deref());
+            res.set_value(*field, random_val(field.tp).as_deref());
         }
 
         res
