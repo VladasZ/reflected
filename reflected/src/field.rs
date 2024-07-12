@@ -14,7 +14,7 @@ pub struct Field<T> {
     pub type_name:   &'static str,
     pub parent_name: &'static str,
     pub optional:    bool,
-    pub _p:          PhantomData<*const T>,
+    pub _p:          PhantomData<fn() -> T>,
 }
 
 impl<T> Clone for Field<T> {

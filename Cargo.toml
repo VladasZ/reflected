@@ -12,4 +12,4 @@ rand = "0.8"
 rust_decimal = "1.34"
 
 #reflected_proc = { path = "reflected_proc" }
-reflected_proc = "0.10.0"
+reflected_proc = "0.10.1"
