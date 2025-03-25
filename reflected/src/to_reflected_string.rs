@@ -1,4 +1,4 @@
-use rust_decimal::{prelude::Zero, Decimal};
+use rust_decimal::{Decimal, prelude::Zero};
 
 pub trait ToReflectedString {
     fn to_reflected_string(&self) -> String;

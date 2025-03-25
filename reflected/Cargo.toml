@@ -1,7 +1,7 @@
 [package]
 name = "reflected"
 version = "0.10.2"
-edition = "2021"
+edition = "2024"
 authors = ["Vladas Zakrevksis <146100@gmail.com>"]
 description = "Something like reflection"
 license = "MIT OR Apache-2.0"
@@ -10,6 +10,6 @@ repository = "https://github.com/VladasZ/reflected"
 
 [dependencies]
 chrono = { workspace = true }
-rand = { workspace = true }
 rust_decimal = { workspace = true }
 reflected_proc = { workspace = true }
+fake = { workspace = true }

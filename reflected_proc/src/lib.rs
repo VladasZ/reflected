@@ -1,11 +1,11 @@
 use std::str::FromStr;
 
 use proc_macro::TokenStream;
-use quote::{quote, ToTokens};
+use quote::{ToTokens, quote};
 use syn::{
-    parse_macro_input, Attribute, Data, DeriveInput, Fields, FieldsNamed, GenericArgument, Ident, Meta,
-    NestedMeta, PathArguments, Type,
     __private::{Span, TokenStream2},
+    Attribute, Data, DeriveInput, Fields, FieldsNamed, GenericArgument, Ident, Meta, NestedMeta,
+    PathArguments, Type, parse_macro_input,
 };
 
 use crate::field::Field;

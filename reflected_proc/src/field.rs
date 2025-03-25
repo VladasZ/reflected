@@ -1,6 +1,6 @@
 use std::str::FromStr;
 
-use syn::{Ident, __private::Span};
+use syn::{__private::Span, Ident};
 
 use crate::TokenStream2;
 

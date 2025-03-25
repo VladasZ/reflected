@@ -1,4 +1,4 @@
-use crate::{random::random_val, Field};
+use crate::{Field, random::random_val};
 
 pub trait Reflected: Send + Default + 'static {
     fn type_name() -> &'static str;
