@@ -1,6 +1,6 @@
 [package]
 name = "reflected"
-version = "0.10.2"
+version = "0.11.1"
 edition = "2024"
 authors = ["Vladas Zakrevksis <146100@gmail.com>"]
 description = "Something like reflection"
@@ -13,3 +13,4 @@ chrono = { workspace = true }
 rust_decimal = { workspace = true }
 reflected_proc = { workspace = true }
 fake = { workspace = true }
+sqlx = { workspace = true }

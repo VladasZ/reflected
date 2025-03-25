@@ -1,3 +1,5 @@
+use sqlx::{Database, Postgres, query::QueryAs};
+
 use crate::{Field, random::random_val};
 
 pub trait Reflected: Send + Default + 'static {
@@ -8,6 +10,11 @@ pub trait Reflected: Send + Default + 'static {
 
     fn get_value(&self, field: Field<Self>) -> String;
     fn set_value(&mut self, field: Field<Self>, value: Option<&str>);
+
+    fn bind_to_sqlx_query<'q, O>(
+        self,
+        query: QueryAs<'q, Postgres, O, <Postgres as Database>::Arguments<'q>>,
+    ) -> QueryAs<'q, Postgres, O, <Postgres as Database>::Arguments<'q>>;
 
     fn field_by_name(name: &str) -> Field<Self> {
         *Self::fields().iter().find(|a| a.name == name).unwrap()

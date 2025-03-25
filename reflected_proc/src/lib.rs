@@ -44,6 +44,7 @@ pub fn reflected(stream: TokenStream) -> TokenStream {
     let simple_fields_reflect = simple_fields_reflect(&name, &fields);
     let get_value = fields_get_value(&fields);
     let set_value = fields_set_value(&fields);
+    let sqlx_bind = fields_sqlx_bind(&fields);
 
     quote! {
         #[derive(Debug)]
@@ -95,8 +96,15 @@ pub fn reflected(stream: TokenStream) -> TokenStream {
                 let field = field.borrow();
                 match field.name {
                     #set_value
-                    _ => unreachable!("Invalid field name in set_value"),
+                    _ => unreachable!("Invalid field name in set_value: {}", field.name),
                 }
+            }
+
+            fn bind_to_sqlx_query<'q, O>(self, query: sqlx::query::QueryAs<'q, sqlx::Postgres, O, <sqlx::Postgres as sqlx::Database>::Arguments<'q>>,)
+                ->  sqlx::query::QueryAs<'q, sqlx::Postgres, O, <sqlx::Postgres as sqlx::Database>::Arguments<'q>> {
+                let mut query = query;
+                #sqlx_bind
+                query
             }
         }
     }
@@ -283,6 +291,33 @@ fn fields_set_value(fields: &Vec<Field>) -> TokenStream2 {
                 .expect(&format!("Failed to convert to: {} from: {}", #name_string, value.unwrap())),
             }
         }
+    }
+
+    res
+}
+
+fn fields_sqlx_bind(fields: &Vec<Field>) -> TokenStream2 {
+    let mut res = quote!();
+
+    for field in fields {
+        let field_name = &field.name;
+
+        if field_name == "id" {
+            continue;
+        }
+
+        if field.custom() || field.is_date() {
+            continue;
+        }
+
+        if field.tp == "Decimal" || field.tp == "usize" {
+            continue;
+        }
+
+        res = quote! {
+            #res
+            query = query.bind(self.#field_name);
+        };
     }
 
     res
