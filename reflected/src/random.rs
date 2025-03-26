@@ -7,7 +7,7 @@ use crate::Type;
 pub(crate) fn random_val(tp: Type) -> Option<String> {
     match tp {
         Type::Text => 8.fake::<String>().into(),
-        Type::Integer | Type::Float => (0..1_000_000_000).fake::<i64>().to_string().into(),
+        Type::Integer | Type::Float => (0..1_000).fake::<i64>().to_string().into(),
         Type::Date => Utc::now().naive_utc().to_string().into(),
         Type::Decimal => Decimal::new(i64::from((u32::MIN..u32::MAX).fake::<u32>()), (1..6).fake())
             .to_string()

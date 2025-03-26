@@ -10,13 +10,14 @@ pub struct User {
     id:   usize,
     name: String,
 
-    birthday:  NaiveDateTime,
-    age:       usize,
-    custom:    CustomField,
-    custom_id: usize,
-    cash:      Decimal,
-    is_poros:  bool,
-    height:    f64,
+    birthday:   NaiveDateTime,
+    age:        usize,
+    custom:     CustomField,
+    custom_id:  usize,
+    cash:       Decimal,
+    is_poros:   bool,
+    height:     f64,
+    dogs_count: i16,
 
     str_opt:     Option<String>,
     usize_opt:   Option<usize>,
@@ -58,6 +59,7 @@ mod test {
         assert!(User::FIELDS.cash.is_decimal());
         assert!(User::FIELDS.is_poros.is_bool());
         assert!(User::FIELDS.height.is_float());
+        assert!(User::FIELDS.dogs_count.is_integer());
 
         assert!(User::FIELDS.str_opt.is_optional());
         assert!(User::FIELDS.str_opt.is_text());
@@ -71,8 +73,8 @@ mod test {
         assert!(User::FIELDS.decimal_opt.is_optional());
         assert!(User::FIELDS.decimal_opt.is_decimal());
 
-        assert_eq!(User::fields().len(), 13);
-        assert_eq!(User::simple_fields().len(), 10);
+        assert_eq!(User::fields().len(), 14);
+        assert_eq!(User::simple_fields().len(), 11);
     }
 
     #[test]
@@ -83,6 +85,7 @@ mod test {
         assert_eq!(User::FIELDS.cash.type_name, "Decimal");
         assert_eq!(User::FIELDS.is_poros.type_name, "bool");
         assert_eq!(User::FIELDS.height.type_name, "f64");
+        assert_eq!(User::FIELDS.dogs_count.type_name, "i16");
         assert_eq!(User::FIELDS.str_opt.type_name, "String");
         assert_eq!(User::FIELDS.usize_opt.type_name, "usize");
         assert_eq!(User::FIELDS.bool_opt.type_name, "bool");
@@ -103,6 +106,7 @@ mod test {
             cash: Decimal::from_str("100.25").unwrap(),
             is_poros: false,
             height: 6.45,
+            dogs_count: 5,
             str_opt: None,
             usize_opt: None,
             bool_opt: None,
@@ -115,6 +119,7 @@ mod test {
         assert_eq!(user.get_value(User::FIELDS.cash), "100.25".to_string());
         assert_eq!(user.get_value(User::FIELDS.is_poros), "0".to_string());
         assert_eq!(user.get_value(User::FIELDS.height), "6.45".to_string());
+        assert_eq!(user.get_value(User::FIELDS.dogs_count), "5".to_string());
 
         assert_eq!(user.get_value(User::FIELDS.str_opt), "NULL".to_string());
         assert_eq!(user.get_value(User::FIELDS.usize_opt), "NULL".to_string());
@@ -144,6 +149,7 @@ mod test {
             cash:        Default::default(),
             is_poros:    false,
             height:      6.45,
+            dogs_count:  5,
             str_opt:     None,
             usize_opt:   None,
             bool_opt:    None,
@@ -158,6 +164,7 @@ mod test {
         user.set_value(User::FIELDS.cash, "100.71".into());
         user.set_value(User::FIELDS.is_poros, "1".into());
         user.set_value(User::FIELDS.height, "5.467".into());
+        user.set_value(User::FIELDS.dogs_count, "17".into());
 
         assert_eq!(user.get_value(User::FIELDS.name), "parker".to_string());
         assert_eq!(user.get_value(User::FIELDS.age), "19".to_string());
@@ -165,6 +172,7 @@ mod test {
         assert_eq!(user.get_value(User::FIELDS.cash), "100.71".to_string());
         assert_eq!(user.get_value(User::FIELDS.is_poros), "1".to_string());
         assert_eq!(user.get_value(User::FIELDS.height), "5.467".to_string());
+        assert_eq!(user.get_value(User::FIELDS.dogs_count), "17".to_string());
 
         user.set_value(User::FIELDS.str_opt, "sokol".into());
         user.set_value(User::FIELDS.usize_opt, "555".into());
@@ -198,6 +206,7 @@ mod test {
                 cash:        Decimal::from_str("100.71").unwrap(),
                 is_poros:    true,
                 height:      5.467,
+                dogs_count:  17,
                 str_opt:     None,
                 usize_opt:   None,
                 bool_opt:    None,
