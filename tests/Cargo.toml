@@ -9,7 +9,7 @@ edition = "2024"
 ignored = ["sqlx"]
 
 [dependencies]
-sqlx = { workspace = true }
+sqlx = { workspace = true, features = ["rust_decimal"] }
 chrono = { workspace = true }
 rust_decimal = { workspace = true }
 

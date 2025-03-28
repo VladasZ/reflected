@@ -310,7 +310,7 @@ fn fields_sqlx_bind(fields: &Vec<Field>) -> TokenStream2 {
             continue;
         }
 
-        if field.tp == "Decimal" || field.tp == "usize" {
+        if field.tp == "usize" {
             continue;
         }
 

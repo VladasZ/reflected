@@ -1118,18 +1118,18 @@ dependencies = [
 
 [[package]]
 name = "reflected"
-version = "0.13.0"
+version = "0.14.0"
 dependencies = [
  "chrono",
  "fake",
- "reflected_proc 0.13.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "reflected_proc 0.14.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "rust_decimal",
  "sqlx",
 ]
 
 [[package]]
 name = "reflected_proc"
-version = "0.13.0"
+version = "0.14.0"
 dependencies = [
  "quote",
  "syn 1.0.109",
@@ -1137,9 +1137,9 @@ dependencies = [
 
 [[package]]
 name = "reflected_proc"
-version = "0.13.0"
+version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "599f34cfdeb28080879099a50a6d16faea345c3aa1565e8bdb7813c404e021c7"
+checksum = "bcd7a80bcbbc6050a7902b323ed8a60cd9af9959cc28386ca1fc3105009f3eef"
 dependencies = [
  "quote",
  "syn 1.0.109",
@@ -1416,6 +1416,7 @@ dependencies = [
  "memchr",
  "once_cell",
  "percent-encoding",
+ "rust_decimal",
  "serde",
  "serde_json",
  "sha2",
@@ -1494,6 +1495,7 @@ dependencies = [
  "percent-encoding",
  "rand 0.8.5",
  "rsa",
+ "rust_decimal",
  "serde",
  "sha1",
  "sha2",
@@ -1531,6 +1533,7 @@ dependencies = [
  "memchr",
  "once_cell",
  "rand 0.8.5",
+ "rust_decimal",
  "serde",
  "serde_json",
  "sha2",
