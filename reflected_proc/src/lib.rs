@@ -337,7 +337,7 @@ fn parse_fields(fields: &FieldsNamed) -> (Option<String>, Vec<Field>) {
                 unreachable!("invalid parse_fields")
             };
 
-            let mut tp = path.path.segments.first().unwrap().ident.clone();
+            let mut tp = path.path.segments.last().unwrap().ident.clone();
 
             if tp == "Option" {
                 optional = true;

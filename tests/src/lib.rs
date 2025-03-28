@@ -2,6 +2,10 @@ use chrono::NaiveDateTime;
 use reflected::Reflected;
 use rust_decimal::Decimal;
 
+mod sercli {
+    pub type Decimal = rust_decimal::Decimal;
+}
+
 #[derive(Default, Clone, PartialEq, Debug)]
 struct CustomField;
 
@@ -10,14 +14,15 @@ pub struct User {
     id:   usize,
     name: String,
 
-    birthday:   NaiveDateTime,
-    age:        usize,
-    custom:     CustomField,
-    custom_id:  usize,
-    cash:       Decimal,
-    is_poros:   bool,
-    height:     f64,
-    dogs_count: i16,
+    birthday:    NaiveDateTime,
+    age:         usize,
+    custom:      CustomField,
+    custom_id:   usize,
+    cash:        Decimal,
+    sercli_cash: sercli::Decimal,
+    is_poros:    bool,
+    height:      f64,
+    dogs_count:  i16,
 
     str_opt:     Option<String>,
     usize_opt:   Option<usize>,
@@ -57,6 +62,7 @@ mod test {
         assert!(User::FIELDS.custom_id.is_foreign_id());
         assert!(User::FIELDS.birthday.is_date());
         assert!(User::FIELDS.cash.is_decimal());
+        assert!(User::FIELDS.sercli_cash.is_decimal());
         assert!(User::FIELDS.is_poros.is_bool());
         assert!(User::FIELDS.height.is_float());
         assert!(User::FIELDS.dogs_count.is_integer());
@@ -73,8 +79,8 @@ mod test {
         assert!(User::FIELDS.decimal_opt.is_optional());
         assert!(User::FIELDS.decimal_opt.is_decimal());
 
-        assert_eq!(User::fields().len(), 14);
-        assert_eq!(User::simple_fields().len(), 11);
+        assert_eq!(User::fields().len(), 15);
+        assert_eq!(User::simple_fields().len(), 12);
     }
 
     #[test]
@@ -104,6 +110,7 @@ mod test {
             custom: CustomField,
             custom_id: 0,
             cash: Decimal::from_str("100.25").unwrap(),
+            sercli_cash: Decimal::from_str("25.45").unwrap(),
             is_poros: false,
             height: 6.45,
             dogs_count: 5,
@@ -147,6 +154,7 @@ mod test {
             custom:      CustomField,
             custom_id:   0,
             cash:        Default::default(),
+            sercli_cash: Default::default(),
             is_poros:    false,
             height:      6.45,
             dogs_count:  5,
@@ -162,6 +170,7 @@ mod test {
         user.set_value(User::FIELDS.age, "19".into());
         user.set_value(User::FIELDS.birthday, Some(&new_bd.to_string()));
         user.set_value(User::FIELDS.cash, "100.71".into());
+        user.set_value(User::FIELDS.sercli_cash, "33.23".into());
         user.set_value(User::FIELDS.is_poros, "1".into());
         user.set_value(User::FIELDS.height, "5.467".into());
         user.set_value(User::FIELDS.dogs_count, "17".into());
@@ -170,6 +179,7 @@ mod test {
         assert_eq!(user.get_value(User::FIELDS.age), "19".to_string());
         assert_eq!(user.get_value(User::FIELDS.birthday), new_bd.to_string());
         assert_eq!(user.get_value(User::FIELDS.cash), "100.71".to_string());
+        assert_eq!(user.get_value(User::FIELDS.sercli_cash), "33.23".to_string());
         assert_eq!(user.get_value(User::FIELDS.is_poros), "1".to_string());
         assert_eq!(user.get_value(User::FIELDS.height), "5.467".to_string());
         assert_eq!(user.get_value(User::FIELDS.dogs_count), "17".to_string());
@@ -204,6 +214,7 @@ mod test {
                 custom:      CustomField,
                 custom_id:   0,
                 cash:        Decimal::from_str("100.71").unwrap(),
+                sercli_cash: Decimal::from_str("33.23").unwrap(),
                 is_poros:    true,
                 height:      5.467,
                 dogs_count:  17,
