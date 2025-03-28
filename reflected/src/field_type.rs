@@ -21,7 +21,7 @@ impl OptionalType {
         }
     }
 
-    pub const fn to_type(&self) -> Type {
+    pub const fn to_non_optional(&self) -> Type {
         match self {
             OptionalType::Float => Type::Float,
             OptionalType::Integer => Type::Integer,
@@ -56,7 +56,7 @@ impl Type {
         }
 
         if let Self::Optional(opt) = self {
-            if tp == opt.to_type() {
+            if tp == opt.to_non_optional() {
                 return true;
             }
         }
@@ -94,6 +94,13 @@ impl Type {
 
     pub fn is_optional(&self) -> bool {
         matches!(self, Self::Optional(_))
+    }
+
+    pub fn get_optional(&self) -> Option<OptionalType> {
+        match self {
+            Self::Optional(op) => Some(*op),
+            _ => None,
+        }
     }
 
     pub fn is_number(&self) -> bool {

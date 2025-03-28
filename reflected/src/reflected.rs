@@ -31,7 +31,7 @@ pub trait Reflected: Send + Default + 'static {
             if field.is_custom() {
                 continue;
             }
-            res.set_value(*field, random_val(field.tp).as_deref());
+            res.set_value(*field, random_val(field).as_deref());
         }
 
         res

@@ -11,8 +11,9 @@ struct CustomField;
 
 #[derive(Reflected, Clone, Default, PartialEq, Debug)]
 pub struct User {
-    id:   usize,
-    name: String,
+    id:    usize,
+    name:  String,
+    email: String,
 
     birthday:    NaiveDateTime,
     age:         usize,
@@ -35,6 +36,7 @@ mod test {
     use std::str::FromStr;
 
     use chrono::{NaiveDateTime, Utc};
+    use fake::{Fake, faker::internet::en::SafeEmail};
     use reflected::{Reflected, ReflectedEq};
     use rust_decimal::Decimal;
 
@@ -79,8 +81,8 @@ mod test {
         assert!(User::DECIMAL_OPT.is_optional());
         assert!(User::DECIMAL_OPT.is_decimal());
 
-        assert_eq!(User::fields().len(), 15);
-        assert_eq!(User::simple_fields().len(), 12);
+        assert_eq!(User::fields().len(), 16);
+        assert_eq!(User::simple_fields().len(), 13);
     }
 
     #[test]
@@ -105,6 +107,7 @@ mod test {
         let mut user = User {
             id: 0,
             name: "peter".into(),
+            email: SafeEmail().fake(),
             birthday,
             age: 15,
             custom: CustomField,
@@ -149,6 +152,7 @@ mod test {
         let mut user = User {
             id:          0,
             name:        "peter".into(),
+            email:       "".to_string(),
             birthday:    Default::default(),
             age:         15,
             custom:      CustomField,
@@ -209,6 +213,7 @@ mod test {
             User {
                 id:          0,
                 name:        "parker".into(),
+                email:       "".to_string(),
                 birthday:    new_bd,
                 age:         19,
                 custom:      CustomField,
