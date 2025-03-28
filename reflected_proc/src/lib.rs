@@ -53,9 +53,7 @@ pub fn reflected(stream: TokenStream) -> TokenStream {
         }
 
         impl #name {
-            pub const FIELDS: #fields_struct_name = #fields_struct_name {
-                #fields_const_var
-            };
+            #fields_const_var
         }
 
         impl reflected::Reflected for #name {
@@ -114,10 +112,10 @@ pub fn reflected(stream: TokenStream) -> TokenStream {
 fn fields_const_var(type_name: &Ident, fields: &Vec<Field>) -> TokenStream2 {
     let mut res = quote!();
 
-    let type_name = TokenStream2::from_str(&format!("\"{type_name}\"")).unwrap();
+    let type_name_string = TokenStream2::from_str(&format!("\"{type_name}\"")).unwrap();
 
     for field in fields {
-        let name = &field.name;
+        let name = TokenStream2::from_str(&field.name.to_string().to_uppercase()).unwrap();
 
         let field_type = field.field_type();
 
@@ -138,14 +136,14 @@ fn fields_const_var(type_name: &Ident, fields: &Vec<Field>) -> TokenStream2 {
 
         res = quote! {
             #res
-            #name: reflected::Field {
+            pub const #name: reflected::Field<#type_name> = reflected::Field {
                 name: #name_string,
                 #tp,
                 type_name: #field_type_name,
-                parent_name: #type_name,
+                parent_name: #type_name_string,
                 optional: #optional,
                 _p: std::marker::PhantomData,
-            },
+            };
         }
     }
 
@@ -172,10 +170,10 @@ fn fields_reflect(name: &Ident, fields: &Vec<Field>) -> TokenStream2 {
     let mut res = quote!();
 
     for field in fields {
-        let field_name = &field.name;
+        let field_name = TokenStream2::from_str(&field.name.to_string().to_uppercase()).unwrap();
         res = quote! {
             #res
-            #name::FIELDS.#field_name,
+            #name::#field_name,
         }
     }
 
@@ -189,10 +187,10 @@ fn simple_fields_reflect(name: &Ident, fields: &Vec<Field>) -> TokenStream2 {
         if !field.is_simple() {
             continue;
         }
-        let field_name = &field.name;
+        let field_name = TokenStream2::from_str(&field.name.to_string().to_uppercase()).unwrap();
         res = quote! {
             #res
-            #name::FIELDS.#field_name,
+            #name::#field_name,
         }
     }
 
