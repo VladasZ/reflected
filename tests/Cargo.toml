@@ -13,5 +13,6 @@ sqlx = { workspace = true, features = ["rust_decimal"] }
 chrono = { workspace = true }
 rust_decimal = { workspace = true }
 fake = { workspace = true }
+strum = { workspace = true }
 
 reflected = { path = "../reflected" }

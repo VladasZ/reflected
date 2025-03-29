@@ -34,10 +34,6 @@ impl<T> Field<T> {
         self.name.contains("_id")
     }
 
-    pub fn is_simple(&self) -> bool {
-        !self.is_id() && !self.is_custom() && !self.is_foreign_id()
-    }
-
     pub fn non_optional(&self) -> Self {
         Self {
             name:        self.name,

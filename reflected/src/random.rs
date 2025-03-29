@@ -26,6 +26,6 @@ pub(crate) fn random_val<T>(field: &Field<T>) -> Option<String> {
                 None
             }
         }
-        Type::Custom => unreachable!("Failed to gen random value for: {field:?}"),
+        Type::Enum => unreachable!("Failed to gen random value for: {field:?}"),
     }
 }

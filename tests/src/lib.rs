@@ -1,13 +1,21 @@
+mod test_enum;
+
 use reflected::Reflected;
 use rust_decimal::Decimal;
+use sqlx::Type;
 
 mod sercli {
     pub type Decimal = rust_decimal::Decimal;
     pub type DateTime = chrono::NaiveDateTime;
 }
 
-#[derive(Default, Clone, PartialEq, Debug)]
-struct CustomField;
+#[derive(strum::Display, strum::EnumString, Type, Copy, Clone, Default, PartialEq, Debug)]
+#[sqlx(type_name = "user_role", rename_all = "lowercase")]
+enum SomeEnum {
+    #[default]
+    A,
+    B,
+}
 
 #[derive(Reflected, Clone, Default, PartialEq, Debug)]
 pub struct User {
@@ -17,13 +25,13 @@ pub struct User {
 
     birthday:    sercli::DateTime,
     age:         usize,
-    custom:      CustomField,
     custom_id:   usize,
     cash:        Decimal,
     sercli_cash: sercli::Decimal,
     is_poros:    bool,
     height:      f64,
     dogs_count:  i16,
+    enum_field:  SomeEnum,
 
     str_opt:     Option<String>,
     usize_opt:   Option<usize>,
@@ -40,7 +48,7 @@ mod test {
     use reflected::{Reflected, ReflectedEq};
     use rust_decimal::Decimal;
 
-    use crate::{CustomField, User, sercli};
+    use crate::{User, sercli};
 
     #[test]
     fn convert_date() {
@@ -60,7 +68,6 @@ mod test {
     #[test]
     fn fields() {
         assert!(User::ID.is_id());
-        assert!(User::CUSTOM.is_custom());
         assert!(User::CUSTOM_ID.is_foreign_id());
         assert!(User::BIRTHDAY.is_date());
         assert!(User::CASH.is_decimal());
@@ -82,13 +89,11 @@ mod test {
         assert!(User::DECIMAL_OPT.is_decimal());
 
         assert_eq!(User::fields().len(), 16);
-        assert_eq!(User::simple_fields().len(), 13);
     }
 
     #[test]
     fn types() {
         assert_eq!(User::ID.type_name, "usize");
-        assert_eq!(User::CUSTOM.type_name, "CustomField");
         assert_eq!(User::BIRTHDAY.type_name, "DateTime");
         assert_eq!(User::CASH.type_name, "Decimal");
         assert_eq!(User::IS_POROS.type_name, "bool");
@@ -110,13 +115,13 @@ mod test {
             email: SafeEmail().fake(),
             birthday,
             age: 15,
-            custom: CustomField,
             custom_id: 0,
             cash: Decimal::from_str("100.25").unwrap(),
             sercli_cash: Decimal::from_str("25.45").unwrap(),
             is_poros: false,
             height: 6.45,
             dogs_count: 5,
+            enum_field: Default::default(),
             str_opt: None,
             usize_opt: None,
             bool_opt: None,
@@ -155,13 +160,13 @@ mod test {
             email:       "".to_string(),
             birthday:    Default::default(),
             age:         15,
-            custom:      CustomField,
             custom_id:   0,
             cash:        Default::default(),
             sercli_cash: Default::default(),
             is_poros:    false,
             height:      6.45,
             dogs_count:  5,
+            enum_field:  Default::default(),
             str_opt:     None,
             usize_opt:   None,
             bool_opt:    None,
@@ -216,13 +221,13 @@ mod test {
                 email:       "".to_string(),
                 birthday:    new_bd,
                 age:         19,
-                custom:      CustomField,
                 custom_id:   0,
                 cash:        Decimal::from_str("100.71").unwrap(),
                 sercli_cash: Decimal::from_str("33.23").unwrap(),
                 is_poros:    true,
                 height:      5.467,
                 dogs_count:  17,
+                enum_field:  Default::default(),
                 str_opt:     None,
                 usize_opt:   None,
                 bool_opt:    None,

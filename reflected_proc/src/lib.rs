@@ -8,17 +8,20 @@ use syn::{
     PathArguments, Type, parse_macro_input,
 };
 
-use crate::field::Field;
+use crate::{field::Field, reflect_enum::reflect_enum};
 
 mod field;
+mod reflect_enum;
 
 /// Data must also derive `Default`
 #[proc_macro_derive(Reflected)]
 pub fn reflected(stream: TokenStream) -> TokenStream {
     let mut stream = parse_macro_input!(stream as DeriveInput);
 
-    let Data::Struct(data) = &mut stream.data else {
-        panic!("`db_entity` macro has to be used with structs")
+    let data = match &mut stream.data {
+        Data::Struct(data) => data,
+        Data::Enum(en) => return reflect_enum(en),
+        Data::Union(_) => panic!("Unsupported data type: {:?}", stream.data),
     };
 
     let Fields::Named(struct_fields) = &mut data.fields else {
@@ -41,7 +44,6 @@ pub fn reflected(stream: TokenStream) -> TokenStream {
     let fields_struct = fields_struct(&name, &fields);
     let fields_const_var = fields_const_var(&name, &fields);
     let fields_reflect = fields_reflect(&name, &fields);
-    let simple_fields_reflect = simple_fields_reflect(&name, &fields);
     let get_value = fields_get_value(&fields);
     let set_value = fields_set_value(&fields);
     let sqlx_bind = fields_sqlx_bind(&fields);
@@ -67,18 +69,12 @@ pub fn reflected(stream: TokenStream) -> TokenStream {
                 ]
             }
 
-            fn simple_fields() -> &'static [reflected::Field<Self>] {
-                &[
-                    #simple_fields_reflect
-                ]
-            }
-
             fn get_value(&self, field: reflected::Field<Self>) -> String {
                 use std::borrow::Borrow;
                 use reflected::ToReflectedString;
                 let field = field.borrow();
 
-                if field.is_custom() {
+                if field.is_enum() {
                     panic!("get_value method is not supported for custom types: {field:?}");
                 }
 
@@ -170,23 +166,6 @@ fn fields_reflect(name: &Ident, fields: &Vec<Field>) -> TokenStream2 {
     let mut res = quote!();
 
     for field in fields {
-        let field_name = TokenStream2::from_str(&field.name.to_string().to_uppercase()).unwrap();
-        res = quote! {
-            #res
-            #name::#field_name,
-        }
-    }
-
-    res
-}
-
-fn simple_fields_reflect(name: &Ident, fields: &Vec<Field>) -> TokenStream2 {
-    let mut res = quote!();
-
-    for field in fields {
-        if !field.is_simple() {
-            continue;
-        }
         let field_name = TokenStream2::from_str(&field.name.to_string().to_uppercase()).unwrap();
         res = quote! {
             #res

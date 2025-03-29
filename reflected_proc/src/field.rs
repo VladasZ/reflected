@@ -20,20 +20,16 @@ impl Field {
         TokenStream2::from_str(&format!("\"{}\"", self.name)).unwrap()
     }
 
-    pub(crate) fn id(&self) -> bool {
+    pub(crate) fn _id(&self) -> bool {
         self.name == Ident::new("id", Span::call_site())
     }
 
-    pub(crate) fn is_foreign_id(&self) -> bool {
+    pub(crate) fn _is_foreign_id(&self) -> bool {
         self.name.to_string().contains("_id")
     }
 
     pub(crate) fn custom(&self) -> bool {
         self.field_type() == Ident::new("Custom", Span::call_site())
-    }
-
-    pub(crate) fn is_simple(&self) -> bool {
-        !self.id() && !self.custom() && !self.is_foreign_id()
     }
 
     pub(crate) fn is_bool(&self) -> bool {
@@ -48,11 +44,15 @@ impl Field {
         self.field_type() == "Date"
     }
 
+    pub(crate) fn _is_enum(&self) -> bool {
+        self.field_type() == "Enum"
+    }
+
     pub(crate) fn field_type(&self) -> Ident {
         let float = Ident::new("Float", Span::call_site());
         let integer = Ident::new("Integer", Span::call_site());
         let text = Ident::new("Text", Span::call_site());
-        let custom = Ident::new("Custom", Span::call_site());
+        let en = Ident::new("Enum", Span::call_site());
         let date = Ident::new("Date", Span::call_site());
         let decimal = Ident::new("Decimal", Span::call_site());
         let bool = Ident::new("Bool", Span::call_site());
@@ -64,7 +64,7 @@ impl Field {
             "NaiveDateTime" | "DateTime" => date,
             "Decimal" => decimal,
             "bool" => bool,
-            _ => custom,
+            _ => en,
         }
     }
 }

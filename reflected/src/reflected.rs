@@ -6,7 +6,6 @@ pub trait Reflected: Send + Default + 'static {
     fn type_name() -> &'static str;
 
     fn fields() -> &'static [Field<Self>];
-    fn simple_fields() -> &'static [Field<Self>];
 
     fn get_value(&self, field: Field<Self>) -> String;
     fn set_value(&mut self, field: Field<Self>, value: Option<&str>);
@@ -28,7 +27,7 @@ pub trait Reflected: Send + Default + 'static {
         let mut res = Self::default();
 
         for field in Self::fields() {
-            if field.is_custom() {
+            if field.is_enum() {
                 continue;
             }
             res.set_value(*field, random_val(field).as_deref());

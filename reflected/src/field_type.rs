@@ -41,7 +41,7 @@ pub enum Type {
     Date,
     Decimal,
     Bool,
-    Custom,
+    Enum,
     Optional(OptionalType),
 }
 
@@ -88,8 +88,8 @@ impl Type {
         self.is_type(Self::Bool)
     }
 
-    pub fn is_custom(&self) -> bool {
-        self.is_type(Self::Custom)
+    pub fn is_enum(&self) -> bool {
+        self.is_type(Self::Enum)
     }
 
     pub fn is_optional(&self) -> bool {
