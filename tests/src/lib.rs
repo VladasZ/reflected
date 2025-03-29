@@ -1,9 +1,9 @@
-use chrono::NaiveDateTime;
 use reflected::Reflected;
 use rust_decimal::Decimal;
 
 mod sercli {
     pub type Decimal = rust_decimal::Decimal;
+    pub type DateTime = chrono::NaiveDateTime;
 }
 
 #[derive(Default, Clone, PartialEq, Debug)]
@@ -15,7 +15,7 @@ pub struct User {
     name:  String,
     email: String,
 
-    birthday:    NaiveDateTime,
+    birthday:    sercli::DateTime,
     age:         usize,
     custom:      CustomField,
     custom_id:   usize,
@@ -40,7 +40,7 @@ mod test {
     use reflected::{Reflected, ReflectedEq};
     use rust_decimal::Decimal;
 
-    use crate::{CustomField, User};
+    use crate::{CustomField, User, sercli};
 
     #[test]
     fn convert_date() {
@@ -89,7 +89,7 @@ mod test {
     fn types() {
         assert_eq!(User::ID.type_name, "usize");
         assert_eq!(User::CUSTOM.type_name, "CustomField");
-        assert_eq!(User::BIRTHDAY.type_name, "NaiveDateTime");
+        assert_eq!(User::BIRTHDAY.type_name, "DateTime");
         assert_eq!(User::CASH.type_name, "Decimal");
         assert_eq!(User::IS_POROS.type_name, "bool");
         assert_eq!(User::HEIGHT.type_name, "f64");
@@ -244,7 +244,7 @@ mod test {
             id:   usize,
             name: String,
 
-            birthday:  NaiveDateTime,
+            birthday:  sercli::DateTime,
             age:       usize,
             custom_id: usize,
             cash:      Decimal,
