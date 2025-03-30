@@ -42,6 +42,7 @@ pub enum Type {
     Decimal,
     Bool,
     Enum,
+    Duration,
     Optional(OptionalType),
 }
 
@@ -90,6 +91,10 @@ impl Type {
 
     pub fn is_enum(&self) -> bool {
         self.is_type(Self::Enum)
+    }
+
+    pub fn is_duration(&self) -> bool {
+        self.is_type(Self::Duration)
     }
 
     pub fn is_optional(&self) -> bool {

@@ -75,7 +75,7 @@ pub fn reflected(stream: TokenStream) -> TokenStream {
                 let field = field.borrow();
 
                 if field.is_enum() {
-                    panic!("get_value method is not supported for custom types: {field:?}");
+                    panic!("get_value method is not supported yet for enum types: {field:?}");
                 }
 
                 match field.name {
@@ -199,7 +199,7 @@ fn fields_get_value(fields: &Vec<Field>) -> TokenStream2 {
                     #name_string => if self.#field_name { "1" } else { "0" }.to_string(),
                 }
             }
-        } else if field.optional || field.is_float() {
+        } else if field.optional || field.is_float() || field.is_duration() {
             res = quote! {
                 #res
                 #name_string => self.#field_name.to_reflected_string(),

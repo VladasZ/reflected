@@ -1,3 +1,4 @@
+use chrono::Duration;
 use rust_decimal::{Decimal, prelude::Zero};
 
 pub trait ToReflectedString {
@@ -45,5 +46,11 @@ impl ToReflectedString for f32 {
         } else {
             self.to_string()
         }
+    }
+}
+
+impl ToReflectedString for Duration {
+    fn to_reflected_string(&self) -> String {
+        self.num_seconds().to_string()
     }
 }

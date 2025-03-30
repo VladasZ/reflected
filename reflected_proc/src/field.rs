@@ -40,6 +40,10 @@ impl Field {
         self.field_type() == "Float"
     }
 
+    pub(crate) fn is_duration(&self) -> bool {
+        self.field_type() == "Duration"
+    }
+
     pub(crate) fn is_date(&self) -> bool {
         self.field_type() == "Date"
     }
@@ -56,6 +60,7 @@ impl Field {
         let date = Ident::new("Date", Span::call_site());
         let decimal = Ident::new("Decimal", Span::call_site());
         let bool = Ident::new("Bool", Span::call_site());
+        let duration = Ident::new("Duration", Span::call_site());
 
         match self.tp.to_string().as_str() {
             "f32" | "f64" => float,
@@ -64,6 +69,7 @@ impl Field {
             "NaiveDateTime" | "DateTime" => date,
             "Decimal" => decimal,
             "bool" => bool,
+            "Duration" => duration,
             _ => en,
         }
     }
