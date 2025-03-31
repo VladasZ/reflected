@@ -6,6 +6,8 @@ pub enum OptionalType {
     Date,
     Decimal,
     Bool,
+    Duration,
+    DateTime,
 }
 
 impl OptionalType {
@@ -17,7 +19,9 @@ impl OptionalType {
             Type::Date => OptionalType::Date,
             Type::Decimal => OptionalType::Decimal,
             Type::Bool => OptionalType::Bool,
-            _ => unreachable!(),
+            Type::Duration => OptionalType::Duration,
+            Type::DateTime => OptionalType::DateTime,
+            Type::Optional(_) | Type::Enum => unreachable!(),
         }
     }
 
@@ -29,6 +33,8 @@ impl OptionalType {
             OptionalType::Date => Type::Date,
             OptionalType::Decimal => Type::Decimal,
             OptionalType::Bool => Type::Bool,
+            OptionalType::Duration => Type::Duration,
+            OptionalType::DateTime => Type::DateTime,
         }
     }
 }
@@ -43,6 +49,7 @@ pub enum Type {
     Bool,
     Enum,
     Duration,
+    DateTime,
     Optional(OptionalType),
 }
 

@@ -27,6 +27,6 @@ pub(crate) fn random_val<T>(field: &Field<T>) -> Option<String> {
             }
         }
         Type::Duration => (0..100).fake::<u64>().to_string().into(),
-        Type::Enum => unreachable!("Failed to gen random value for: {field:?}"),
+        Type::DateTime | Type::Enum => unreachable!("Failed to gen random value for: {field:?}"),
     }
 }

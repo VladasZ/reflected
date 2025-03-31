@@ -1,6 +1,6 @@
 use std::str::FromStr;
 
-use chrono::Duration;
+use chrono::{Duration, NaiveDateTime};
 use rust_decimal::Decimal;
 
 pub trait ToReflectedVal<T> {
@@ -14,11 +14,35 @@ macro_rules! impl_to_reflected_val {
                 <$t>::from_str(self).map_err(|_e| format!("Failed to parse {}", self))
             }
         }
+
+        impl ToReflectedVal<Option<$t>> for &str {
+            fn to_reflected_val(&self) -> Result<Option<$t>, String> {
+                Ok(if *self == "NULL" {
+                    None
+                } else {
+                    Some(<$t>::from_str(self).map_err(|_e| format!("Failed to parse {}", self))?)
+                })
+            }
+        }
     )*};
 }
 
 impl_to_reflected_val!(
-    i8, u8, i16, u16, i32, u32, i64, u64, f32, f64, isize, usize, String, Decimal
+    i8,
+    u8,
+    i16,
+    u16,
+    i32,
+    u32,
+    i64,
+    u64,
+    f32,
+    f64,
+    isize,
+    usize,
+    String,
+    Decimal,
+    NaiveDateTime
 );
 
 impl ToReflectedVal<Duration> for &str {

@@ -253,7 +253,7 @@ fn fields_set_value(fields: &Vec<Field>) -> TokenStream2 {
         } else if field.is_date() {
             res = quote! {
                 #res
-                #name_string => self.#field_name = sercli::DateTime::parse_from_str(&value.unwrap(), "%Y-%m-%d %H:%M:%S%.9f").unwrap(),
+                #name_string => self.#field_name = sercli::DateTime::parse_from_str(&value.unwrap(), "%Y-%m-%d %H:%M:%S%.9f").unwrap().into(),
             }
         } else if field.optional {
             res = quote! {
