@@ -1,6 +1,6 @@
 [package]
 name = "reflected_proc"
-version = "0.21.0"
+version = "0.22.0"
 edition = "2024"
 authors = ["Vladas Zakrevksis <146100@gmail.com>"]
 description = "Proc macro for reflected"
@@ -10,6 +10,10 @@ repository = "https://github.com/VladasZ/reflected"
 
 [lib]
 proc-macro = true
+
+[features]
+default = []
+sqlx_bind = []
 
 [dependencies]
 quote = "=1.0"

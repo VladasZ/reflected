@@ -13,6 +13,12 @@ use crate::{field::Field, reflect_enum::reflect_enum};
 mod field;
 mod reflect_enum;
 
+#[cfg(feature = "sqlx_bind")]
+const SQLX_BIND_ENABLED: bool = true;
+
+#[cfg(not(feature = "sqlx_bind"))]
+const SQLX_BIND_ENABLED: bool = false;
+
 /// Data must also derive `Default`
 #[proc_macro_derive(Reflected)]
 pub fn reflected(stream: TokenStream) -> TokenStream {
@@ -46,7 +52,21 @@ pub fn reflected(stream: TokenStream) -> TokenStream {
     let fields_reflect = fields_reflect(&name, &fields);
     let get_value = fields_get_value(&fields);
     let set_value = fields_set_value(&fields);
-    let sqlx_bind = fields_sqlx_bind(&fields);
+
+    let sqlx_bind_code = if SQLX_BIND_ENABLED {
+        let sqlx_bind = fields_sqlx_bind(&fields);
+
+        quote! {
+            fn bind_to_sqlx_query<'q, O>(self, query: sqlx::query::QueryAs<'q, sqlx::Postgres, O, <sqlx::Postgres as sqlx::Database>::Arguments<'q>>,)
+                ->  sqlx::query::QueryAs<'q, sqlx::Postgres, O, <sqlx::Postgres as sqlx::Database>::Arguments<'q>> {
+                let mut query = query;
+                #sqlx_bind
+                query
+            }
+        }
+    } else {
+        quote! {}
+    };
 
     quote! {
         #[derive(Debug)]
@@ -94,12 +114,7 @@ pub fn reflected(stream: TokenStream) -> TokenStream {
                 }
             }
 
-            fn bind_to_sqlx_query<'q, O>(self, query: sqlx::query::QueryAs<'q, sqlx::Postgres, O, <sqlx::Postgres as sqlx::Database>::Arguments<'q>>,)
-                ->  sqlx::query::QueryAs<'q, sqlx::Postgres, O, <sqlx::Postgres as sqlx::Database>::Arguments<'q>> {
-                let mut query = query;
-                #sqlx_bind
-                query
-            }
+            #sqlx_bind_code
         }
     }
     .into()
