@@ -10,6 +10,8 @@ mod sercli {
     pub type DateTime = chrono::NaiveDateTime;
 }
 
+type DateTime = sercli::DateTime;
+
 #[derive(strum::Display, strum::EnumString, Type, Copy, Clone, Default, PartialEq, Debug)]
 #[sqlx(type_name = "user_role", rename_all = "lowercase")]
 enum SomeEnum {
@@ -46,6 +48,7 @@ pub struct User {
     usize_opt:   Option<usize>,
     bool_opt:    Option<bool>,
     decimal_opt: Option<Decimal>,
+    death_day:   Option<DateTime>,
 }
 
 #[cfg(test)]
@@ -97,8 +100,9 @@ mod test {
 
         assert!(User::DECIMAL_OPT.is_optional());
         assert!(User::DECIMAL_OPT.is_decimal());
+        assert!(User::DEATH_DAY.is_date());
 
-        assert_eq!(User::fields().len(), 17);
+        assert_eq!(User::fields().len(), 18);
     }
 
     #[test]
@@ -114,6 +118,7 @@ mod test {
         assert_eq!(User::USIZE_OPT.type_name, "usize");
         assert_eq!(User::BOOL_OPT.type_name, "bool");
         assert_eq!(User::DECIMAL_OPT.type_name, "Decimal");
+        assert_eq!(User::DEATH_DAY.type_name, "DateTime");
     }
 
     #[test]
@@ -138,6 +143,7 @@ mod test {
             usize_opt: None,
             bool_opt: None,
             decimal_opt: None,
+            death_day: None,
         };
 
         assert_eq!(user.get_value(User::NAME), "peter".to_string());
@@ -153,16 +159,19 @@ mod test {
         assert_eq!(user.get_value(User::USIZE_OPT), "NULL".to_string());
         assert_eq!(user.get_value(User::BOOL_OPT), "NULL".to_string());
         assert_eq!(user.get_value(User::DECIMAL_OPT), "NULL".to_string());
+        assert_eq!(user.get_value(User::DEATH_DAY), "NULL".to_string());
 
         user.str_opt = Some("stre".to_string());
         user.usize_opt = Some(222);
         user.bool_opt = Some(false);
         user.decimal_opt = Some(Decimal::from_str("100.25").unwrap());
+        user.death_day = Some(birthday);
 
         assert_eq!(user.get_value(User::STR_OPT), "stre".to_string());
         assert_eq!(user.get_value(User::USIZE_OPT), "222".to_string());
         assert_eq!(user.get_value(User::BOOL_OPT), "0".to_string());
         assert_eq!(user.get_value(User::DECIMAL_OPT), "100.25".to_string());
+        assert_eq!(user.get_value(User::DEATH_DAY), birthday.to_string());
     }
 
     #[test]
@@ -185,6 +194,7 @@ mod test {
             usize_opt:            None,
             bool_opt:             None,
             decimal_opt:          None,
+            death_day:            None,
         };
 
         let new_bd = Utc::now().naive_utc();
@@ -213,21 +223,25 @@ mod test {
         user.set_value(User::USIZE_OPT, "555".into());
         user.set_value(User::BOOL_OPT, "1".into());
         user.set_value(User::DECIMAL_OPT, "100.71".into());
+        user.set_value(User::DEATH_DAY, Some(&new_bd.to_string()));
 
         assert_eq!(user.get_value(User::STR_OPT), "sokol".to_string());
         assert_eq!(user.get_value(User::USIZE_OPT), "555".to_string());
         assert_eq!(user.get_value(User::BOOL_OPT), "1".to_string());
         assert_eq!(user.get_value(User::DECIMAL_OPT), "100.71".to_string());
+        assert_eq!(user.get_value(User::DEATH_DAY), new_bd.to_string());
 
         user.set_value(User::STR_OPT, None);
         user.set_value(User::USIZE_OPT, None);
         user.set_value(User::BOOL_OPT, None);
         user.set_value(User::DECIMAL_OPT, None);
+        user.set_value(User::DEATH_DAY, None);
 
         assert_eq!(user.get_value(User::STR_OPT), "NULL".to_string());
         assert_eq!(user.get_value(User::USIZE_OPT), "NULL".to_string());
         assert_eq!(user.get_value(User::BOOL_OPT), "NULL".to_string());
         assert_eq!(user.get_value(User::DECIMAL_OPT), "NULL".to_string());
+        assert_eq!(user.get_value(User::DEATH_DAY), "NULL".to_string());
 
         assert_eq!(
             user,
@@ -249,6 +263,7 @@ mod test {
                 usize_opt:            None,
                 bool_opt:             None,
                 decimal_opt:          None,
+                death_day:            None,
             }
         );
     }

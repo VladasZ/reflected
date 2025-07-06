@@ -266,12 +266,25 @@ fn fields_set_value(fields: &Vec<Field>) -> TokenStream2 {
                 }
             }
         } else if field.is_date() {
-            res = quote! {
-                #res
-                #name_string => self.#field_name =
-                    sercli::DateTime::parse_from_str(&value.expect("Trying to set non optional date from None value"), "%Y-%m-%d %H:%M:%S%.9f").unwrap_or_else(|err| {
-                        panic!("Failed to parse date from: {}. Err: {err}", value.expect("Should be ok. reflected data parse"));
-                    }).into(),
+            if field.optional {
+                res = quote! {
+                    #res
+                    #name_string =>  {
+                        self.#field_name = value.map(|a|
+                            sercli::DateTime::parse_from_str(&a, "%Y-%m-%d %H:%M:%S%.9f").unwrap_or_else(|err| {
+                                panic!("Failed to parse date from: {}. Err: {err}", a);
+                            }).into()
+                        )
+                    },
+                }
+            } else {
+                res = quote! {
+                    #res
+                    #name_string => self.#field_name =
+                        sercli::DateTime::parse_from_str(&value.expect("Trying to set non optional date from None value"), "%Y-%m-%d %H:%M:%S%.9f").unwrap_or_else(|err| {
+                            panic!("Failed to parse date from: {}. Err: {err}", value.expect("Should be ok. reflected data parse"));
+                        }).into(),
+                }
             }
         } else if field.optional {
             res = quote! {

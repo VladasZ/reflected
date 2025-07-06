@@ -15,4 +15,4 @@ strum = { version = "0.27", features = ["derive", "strum_macros"] }
 
 
 #reflected_proc = { path = "reflected_proc" }
-reflected_proc = "=0.24.0"
+reflected_proc = "=0.25.0"
