@@ -51,6 +51,6 @@ impl ToReflectedVal<Duration> for &str {
             .parse()
             .map_err(|_e| format!("Failed to parse i64 for duration from: {self}"))?;
 
-        Ok(Duration::new(seconds, 0).unwrap())
+        Ok(Duration::new(seconds, 0).unwrap_or_else(|| panic!("Failed to create Duration from {seconds}")))
     }
 }

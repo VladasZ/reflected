@@ -11,8 +11,8 @@ impl<T: Reflected> ReflectedEq for T {
             let b = other.get_value(*field);
 
             if field.is_float() || field.is_decimal() {
-                let a: f64 = a.parse().unwrap();
-                let b: f64 = b.parse().unwrap();
+                let a: f64 = a.parse().unwrap_or_else(|err| panic!("Failed to parse f64 from {a}: {err}"));
+                let b: f64 = b.parse().unwrap_or_else(|err| panic!("Failed to parse f64 from {a}: {err}"));
 
                 let diff = (a - b).abs();
 

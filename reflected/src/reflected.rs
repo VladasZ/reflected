@@ -15,7 +15,12 @@ pub trait Reflected: Send + Default + 'static {
     ) -> sqlx::query::QueryAs<'q, sqlx::Postgres, O, <sqlx::Postgres as sqlx::Database>::Arguments<'q>>;
 
     fn field_by_name(name: &str) -> Field<Self> {
-        *Self::fields().iter().find(|a| a.name == name).unwrap()
+        *Self::fields().iter().find(|a| a.name == name).unwrap_or_else(|| {
+            panic!(
+                "Failed to get field_by_name of {}. Field name: {name}",
+                Self::type_name(),
+            )
+        })
     }
 
     fn value_by_name(&self, name: &str) -> String {
