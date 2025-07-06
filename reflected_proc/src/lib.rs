@@ -257,7 +257,7 @@ fn fields_set_value(fields: &Vec<Field>) -> TokenStream2 {
                 res = quote! {
                     #res
                     #name_string =>  {
-                        self.#field_name = match value.unwrap() {
+                        self.#field_name = match value.expect("Trying to set non optional bool with None value") {
                             "0" => false,
                             "1" => true,
                             _ => unreachable!("Invalid value in bool: {value:?}")
@@ -268,7 +268,10 @@ fn fields_set_value(fields: &Vec<Field>) -> TokenStream2 {
         } else if field.is_date() {
             res = quote! {
                 #res
-                #name_string => self.#field_name = sercli::DateTime::parse_from_str(&value.unwrap(), "%Y-%m-%d %H:%M:%S%.9f").unwrap().into(),
+                #name_string => self.#field_name =
+                    sercli::DateTime::parse_from_str(&value.expect("Trying to set non optional date from None value"), "%Y-%m-%d %H:%M:%S%.9f").unwrap_or_else(|err| {
+                        panic!("Failed to parse date from: {}. Err: {err}", value.expect("Should be ok. reflected data parse"));
+                    }).into(),
             }
         } else if field.optional {
             res = quote! {
@@ -279,7 +282,7 @@ fn fields_set_value(fields: &Vec<Field>) -> TokenStream2 {
         } else {
             res = quote! {
                 #res
-                #name_string => self.#field_name = value.unwrap().to_reflected_val()
+                #name_string => self.#field_name = value.expect("Trying to set non optional field from None").to_reflected_val()
                 .expect(&format!("Failed to convert to: {} from: {}", #name_string, value.unwrap())),
             }
         }
