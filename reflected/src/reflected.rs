@@ -1,4 +1,4 @@
-use crate::{Field, random::random_val};
+use crate::Field;
 
 pub trait Reflected: Send + Default + 'static {
     fn type_name() -> &'static str;
@@ -25,18 +25,5 @@ pub trait Reflected: Send + Default + 'static {
 
     fn value_by_name(&self, name: &str) -> String {
         self.get_value(Self::field_by_name(name))
-    }
-
-    fn random() -> Self {
-        let mut res = Self::default();
-
-        for field in Self::fields() {
-            if field.is_enum() {
-                continue;
-            }
-            res.set_value(*field, random_val(field).as_deref());
-        }
-
-        res
     }
 }

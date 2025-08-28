@@ -63,10 +63,10 @@ impl Type {
             return true;
         }
 
-        if let Self::Optional(opt) = self {
-            if tp == opt.to_non_optional() {
-                return true;
-            }
+        if let Self::Optional(opt) = self
+            && tp == opt.to_non_optional()
+        {
+            return true;
         }
 
         false

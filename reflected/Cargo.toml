@@ -1,6 +1,6 @@
 [package]
 name = "reflected"
-version = "0.25.0"
+version = "0.26.0"
 edition = "2024"
 authors = ["Vladas Zakrevksis <146100@gmail.com>"]
 description = "Something like reflection"
@@ -20,5 +20,4 @@ sqlx_bind = ["sqlx", "reflected_proc/sqlx_bind"]
 chrono = { workspace = true }
 rust_decimal = { workspace = true }
 reflected_proc = { workspace = true }
-fake = { workspace = true }
 sqlx = { workspace = true, optional = true }

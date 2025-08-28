@@ -1,5 +1,3 @@
-mod test_enum;
-
 use chrono::Duration;
 use reflected::{Reflected, ToReflectedVal};
 use rust_decimal::Decimal;
@@ -56,7 +54,6 @@ mod test {
     use std::str::FromStr;
 
     use chrono::{Duration, NaiveDateTime, TimeDelta, Utc};
-    use fake::{Fake, faker::internet::en::SafeEmail};
     use reflected::{Reflected, ReflectedEq};
     use rust_decimal::Decimal;
 
@@ -128,7 +125,7 @@ mod test {
         let mut user = User {
             id: 0,
             name: "peter".into(),
-            email: SafeEmail().fake(),
+            email: "146100@gmail.com".into(),
             birthday,
             age: 15,
             custom_id: 0,
@@ -269,12 +266,6 @@ mod test {
     }
 
     #[test]
-    fn random() {
-        let _user = User::random();
-        dbg!(_user);
-    }
-
-    #[test]
     fn reflected_eq() {
         #[derive(Default, Reflected, Clone)]
         struct Test {
@@ -289,7 +280,7 @@ mod test {
             height:    f64,
         }
 
-        let user_1 = Test::random();
+        let user_1 = Test::default();
         let mut user_2 = user_1.clone();
 
         user_1.assert_eq(&user_2);

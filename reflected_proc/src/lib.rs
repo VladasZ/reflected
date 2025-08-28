@@ -387,10 +387,10 @@ fn get_attribute_name(attribute: &Attribute) -> String {
 }
 
 fn get_attribute_value(attribute: &Attribute) -> Option<String> {
-    if let Ok(Meta::List(meta_list)) = attribute.parse_meta() {
-        if let NestedMeta::Meta(Meta::Path(path)) = &meta_list.nested[0] {
-            return Some(path.segments.last()?.ident.to_string());
-        }
+    if let Ok(Meta::List(meta_list)) = attribute.parse_meta()
+        && let NestedMeta::Meta(Meta::Path(path)) = &meta_list.nested[0]
+    {
+        return Some(path.segments.last()?.ident.to_string());
     }
     None
 }
