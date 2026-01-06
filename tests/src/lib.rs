@@ -69,7 +69,7 @@ mod test {
 
         dbg!(&date_string);
 
-        let parsed_date = NaiveDateTime::parse_from_str(&date_string, "%Y-%m-%d %H:%M:%S%.9f");
+        let parsed_date = NaiveDateTime::parse_from_str(&date_string, "%Y-%m-%d %H:%M:%S%.f");
 
         dbg!(&parsed_date);
     }

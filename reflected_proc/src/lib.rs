@@ -271,7 +271,7 @@ fn fields_set_value(fields: &Vec<Field>) -> TokenStream2 {
                     #res
                     #name_string =>  {
                         self.#field_name = value.map(|a|
-                            sercli::DateTime::parse_from_str(&a, "%Y-%m-%d %H:%M:%S%.9f").unwrap_or_else(|err| {
+                            sercli::DateTime::parse_from_str(&a, "%Y-%m-%d %H:%M:%S%.f").unwrap_or_else(|err| {
                                 panic!("Failed to parse date from: {}. Err: {err}", a);
                             }).into()
                         )
@@ -281,7 +281,7 @@ fn fields_set_value(fields: &Vec<Field>) -> TokenStream2 {
                 res = quote! {
                     #res
                     #name_string => self.#field_name =
-                        sercli::DateTime::parse_from_str(&value.expect("Trying to set non optional date from None value"), "%Y-%m-%d %H:%M:%S%.9f").unwrap_or_else(|err| {
+                        sercli::DateTime::parse_from_str(&value.expect("Trying to set non optional date from None value"), "%Y-%m-%d %H:%M:%S%.f").unwrap_or_else(|err| {
                             panic!("Failed to parse date from: {}. Err: {err}", value.expect("Should be ok. reflected data parse"));
                         }).into(),
                 }

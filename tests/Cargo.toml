@@ -15,3 +15,6 @@ rust_decimal = { workspace = true }
 strum = { workspace = true }
 
 reflected = { path = "../reflected" }
+
+[dev-dependencies]
+pretty_assertions = { workspace = true }
