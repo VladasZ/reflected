@@ -54,7 +54,7 @@ mod test {
     use std::str::FromStr;
 
     use chrono::{Duration, NaiveDateTime, TimeDelta, Utc};
-    use reflected::{RandomReflected, Reflected, ReflectedEq};
+    use reflected::{Reflected, ReflectedEq};
     use rust_decimal::Decimal;
 
     use crate::{User, sercli};
@@ -325,12 +325,5 @@ mod test {
             ),
             "5:25"
         );
-    }
-
-    #[test]
-    fn random() {
-        let user = User::random();
-
-        dbg!(&user);
     }
 }
