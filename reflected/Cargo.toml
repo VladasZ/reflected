@@ -1,12 +1,12 @@
 [package]
-name = "reflected"
-version = "0.29.0"
-edition = "2024"
 authors = ["Vladas Zakrevksis <146100@gmail.com>"]
 description = "Something like reflection"
-license = "MIT OR Apache-2.0"
+edition = "2024"
 homepage = "https://github.com/VladasZ/reflected"
+license = "MIT OR Apache-2.0"
+name = "reflected"
 repository = "https://github.com/VladasZ/reflected"
+version = "0.30.0"
 
 [package.metadata.cargo-machete]
 ignored = ["sqlx"]
@@ -15,11 +15,11 @@ ignored = ["sqlx"]
 default = []
 random = ["fake"]
 
-sqlx_bind = ["sqlx", "reflected_proc/sqlx_bind"]
+sqlx_bind = ["reflected_proc/sqlx_bind", "sqlx"]
 
 [dependencies]
 chrono = { workspace = true }
 fake = { workspace = true, optional = true }
-rust_decimal = { workspace = true }
 reflected_proc = { workspace = true }
+rust_decimal = { workspace = true }
 sqlx = { workspace = true, optional = true }

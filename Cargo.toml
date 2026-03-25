@@ -2,17 +2,17 @@
 
 resolver = "3"
 
-members = ["tests", "reflected", "reflected_proc"]
+members = ["reflected", "reflected_proc", "tests"]
 
 default-members = ["reflected"]
 
 [workspace.dependencies]
 chrono = "0.4"
-rust_decimal = "1.34"
-sqlx = { version = "0.8", features = ["postgres", "chrono"] }
-strum = { version = "0.27", features = ["derive", "strum_macros"] }
+fake = "5.1"
 pretty_assertions = "1.4"
-fake = "4.4"
+rust_decimal = "1.40"
+sqlx = { version = "0.8", features = ["chrono", "postgres"] }
+strum = { version = "0.28", features = ["derive", "strum_macros"] }
 
 
 #reflected_proc = { path = "reflected_proc" }
